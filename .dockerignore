@@ -1,0 +1,20 @@
+# Build
+dist
+node_modules
+
+# IDE
+.idea
+.vscode
+
+#Ignore
+.dockerignore
+.gitignore
+
+# Docker
+Dockerfile
+
+# ENV
+.env
+
+# Lock
+yarn.lock

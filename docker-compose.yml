@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  task_manager_db:
+    container_name: task_manager_db
+    image: postgres:16
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - PGPORT=${DB_PORT}
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  nestjs:
+    container_name: nest_app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - task_manager_db
+    env_file:
+      - .env
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_TYPE=${DB_TYPE}
+      - DB_HOST=${DB_HOST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    
+      - JWT_EXPIRES=${JWT_EXPIRES}
+      - APP_PORT=${APP_PORT}
+      - BCRYPT_SALT=${BCRYPT_SALT}
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+
+volumes:
+  postgres_data:
